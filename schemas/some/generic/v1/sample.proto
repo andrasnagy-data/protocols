@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package some.generic.v1;
+
+import "google/protobuf/descriptor.proto";
+import "google/protobuf/struct.proto";
+
+extend google.protobuf.FieldOptions {
+    double offset = 50001;
+    double scale = 50002;
+    double valid_min = 50003;
+    double valid_max = 50004;
+  }
+
+message IMU {
+    // Field types
+  
+    message AccelerationAxis {
+      oneof value {
+        google.protobuf.NullValue invalid = 1;
+        int32 val = 2 [
+          (scale) = 1000.0,
+          (offset) = 0.0,
+          (valid_min) = -16000.0,
+          (valid_max) = 16000.0
+        ];
+      }
+    }
+    message Acceleration {
+      optional AccelerationAxis x = 1;
+      optional AccelerationAxis y = 2;
+      optional AccelerationAxis z = 3;
+    }
+    message GyroscopeAxis {
+      oneof value {
+        google.protobuf.NullValue invalid = 1;
+        int32 val = 2 [
+          (scale) = 1000.0,
+          (offset) = 0.0,
+          (valid_min) = -2000000.0,
+          (valid_max) = 2000000.0
+        ];
+      }
+    }
+    message Gyroscope {
+      optional GyroscopeAxis x = 1;
+      optional GyroscopeAxis y = 2;
+      optional GyroscopeAxis z = 3;
+    }
+    message MagnetometerAxis {
+      oneof value {
+        google.protobuf.NullValue invalid = 1;
+        int32 val = 2 [
+          (scale) = 1000.0,
+          (offset) = 0.0,
+          (valid_min) = -2500000.0,
+          (valid_max) = 2500000.0
+        ];
+      }
+    }
+    message Magnetometer {
+      optional MagnetometerAxis x = 1;
+      optional MagnetometerAxis y = 2;
+      optional MagnetometerAxis z = 3;
+      optional MagnetometerAxis rhall = 4;
+    }
+  
+    // List of fields
+  
+    Acceleration acc = 1;
+    Gyroscope gyr = 2;
+    Magnetometer mag = 3;
+  }
+  
+
+  message Sample {
+    optional uint64 timestamp = 1;
+    IMU imu = 2;
+  }
